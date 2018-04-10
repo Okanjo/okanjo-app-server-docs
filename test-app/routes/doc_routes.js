@@ -36,7 +36,9 @@ module.exports = function() {
         method: 'GET',
         path: '/docs',
         handler: (request, reply) => {
-            reply(this.app.services.docs.getDocsPageMarkupTemplate()).header('content-type', 'text/html; charset=UTF-8');
+            reply(this.app.services.docs.getDocsPageMarkupTemplate({
+                // cdn: 'http://localhost:3002'
+            })).header('content-type', 'text/html; charset=UTF-8');
         },
         config: {
             tags: ['Excluded']

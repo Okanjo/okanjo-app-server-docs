@@ -1,6 +1,6 @@
 {
   "name": "okanjo-app-server-docs",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Generate API/route docs automatically",
   "main": "DocService.js",
   "scripts": {

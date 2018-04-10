@@ -31,9 +31,23 @@ module.exports = function() {
         image_urls: Joi.array().items(Joi.string().uri({ scheme: ['http','https'] })).unique().max(25).description('Product images. The first image will be used for listings and should be a square. Remaining images are for additional detail.'),
         buy_url_track_param: Joi.string().trim().min(1).max(250).allow(null).description('Name of parameter to append to buy_url for campaign tracking'),
 
-        currency: Joi.string().alphanum().length(3).uppercase().description('ISO 4217 currency code.').example('USD')
+        currency: Joi.string().alphanum().length(3).uppercase().description('ISO 4217 currency code.').example('USD'),
 
     };
+
+    app.fields.complexObject = Joi.object().keys({
+
+        stuff: Joi.object().keys({
+            id: app.fields.id.optional(),
+            resourceName: app.fields.resourceName.optional(),
+            take: app.fields.take
+        }),
+
+        things: Joi.object().keys({
+            description: app.fields.description.optional(),
+            price: app.fields.price.optional(),
+        }),
+    });
 
 
     this.hapi.route({
@@ -251,6 +265,24 @@ module.exports = function() {
             id: 'test.presense',
             description: "Whatever",
             tags: ["Testy", "Presense Tests"]
+        }
+    });
+
+
+
+    this.hapi.route({
+        method: 'POST',
+        path: '/complex/objects',
+        handler,
+        config: {
+            validate: {
+                payload: {
+                    complexObject: app.fields.complexObject
+                }
+            },
+            id: 'test.complex',
+            description: "Complex Object Breakout",
+            tags: ["Testy", "Complex Object"]
         }
     });
 

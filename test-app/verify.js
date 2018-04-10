@@ -5,6 +5,7 @@
 // $ node test-app/verify.js
 //
 
+const Repl = require('repl');
 const OkanjoApp = require('okanjo-app');
 const OkanjoWebServer = require('okanjo-app-server');
 
@@ -39,4 +40,11 @@ const server = new OkanjoWebServer(app, config.webServer, {
 // Assign the server
 app.services.docs.server = server;
 
+
+
+// Expose a REPL for debugging
+const replServer = Repl.start({prompt: '> '});
+replServer.context.app = app;
+replServer.context.config = config;
+replServer.context.server = server;
 

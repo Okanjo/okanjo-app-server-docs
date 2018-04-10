@@ -84,6 +84,18 @@ describe('Okanjo Server Docs', () => {
         });
     });
 
+    it('should serve markdown docs with options', function(done) {
+        const markup = app.services.docs.getDocsPageMarkupTemplate({ cdn: 'custom.example.com' });
+        markup.should.match(/custom\.example\.com\/css\/theme\.css/);
+        done();
+    });
+
+    it('should serve markdown docs with no options', function(done) {
+        const markup = app.services.docs.getDocsPageMarkupTemplate();
+        markup.should.match(/developer\.okanjo\.com\/css\/theme\.css/);
+        done();
+    });
+
     it('should serve markdown docs private mode', function(done) {
         Needle.get(`${baseUrl}docs/markdown?private=1`, function(err, res) {
             should(err).not.be.ok();

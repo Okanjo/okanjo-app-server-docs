@@ -213,19 +213,27 @@ class DocService {
     /**
      * Converts a validation group (e.g. params, query, payload) into usable information
      * @param bucket
+     * @param params (recursive support)
      * @return {Array}
      * @private
      */
-    _convertValidationToParamSpec(bucket) {
-        const params = [];
+    _convertValidationToParamSpec(bucket, params = []) {
         Object.keys(bucket).forEach((paramName) => {
             const spec = bucket[paramName];
             const param = {
                 name: paramName,
                 description: spec.description,
                 type: spec.type,
-                required: (spec.flags || {}).presence === "required"
+                required: (spec.flags || {}).presence === "required",
+                default: (spec.flags || {}).default,
+                children: []
             };
+
+            if (spec.children) {
+                // Add children to the bucket
+                this._convertValidationToParamSpec(spec.children, param.children);
+            }
+
             params.push(param);
         });
         return params;
@@ -349,10 +357,11 @@ class DocService {
      * Inserts the route definition into the given markup builder
      * @param markup
      * @param schema
+     * @param [prefix] – Prefix to attach to front of element
      */
-    _parameterize(markup, schema) {
+    _parameterize(markup, schema, prefix = '') {
         if (schema) {
-            markup.push('');
+            if (prefix === '') markup.push('');
 
             Object.keys(schema).forEach((key) => {
                 const val = schema[key],
@@ -382,10 +391,15 @@ class DocService {
                 }
 
                 /* istanbul ignore next */
-                markup.push(`${key} ${badges.join(' ')}\n:   ${val.description  || 'TODO'} ${enumeration} ${example}`);
+                markup.push(`${prefix}${key} ${badges.join(' ')}\n${prefix}:   ${val.description  || 'TODO'} ${enumeration} ${example}`);
+
+                // Does this object have children? if so, show child properties
+                if (val.children) {
+                    this._parameterize(markup, val.children, prefix + "  ");
+                }
             });
 
-            markup.push('');
+            if (prefix === '') markup.push('');
         } else {
             markup.push(`None.`);
         }
@@ -599,9 +613,11 @@ class DocService {
 
     /**
      * Gets the documentation page template
+     * @param {*} [options]
      * @return {*}
      */
-    getDocsPageMarkupTemplate() {
+    getDocsPageMarkupTemplate(options = {}) {
+        const cdn = options.cdn || 'https://developer.okanjo.com';
         return `<!doctype html>
             <html>
             <head>
@@ -612,7 +628,7 @@ class DocService {
 
                 <title>${this.title}</title>
 
-                <link  href='https://developer.okanjo.com/css/theme.css' rel='stylesheet'>
+                <link  href='${cdn}/css/theme.css' rel='stylesheet'>
 
                 <!-- Meta -->
                 <meta content="${this.title}" property="og:title">
@@ -621,7 +637,7 @@ class DocService {
                 <!-- Initializer -->
 
                 <!--suppress JSUnresolvedLibraryURL -->
-                <script src="https://developer.okanjo.com/js/docs-build.js"></script>
+                <script src="${cdn}/js/docs-build.js"></script>
                 <script>
                     Flatdoc.run({
 
@@ -634,7 +650,7 @@ class DocService {
             <body role='flatdoc'>
 
             <div class="okanjo-header">
-                <a href="/"><img src="https://developer.okanjo.com/img/okanjo.png"></a><h1>Developer Docs</h1>
+                <a href="/"><img src="${cdn}/img/okanjo.png"></a><h1>Developer Docs</h1>
             </div>
 
             <div class='header'>
