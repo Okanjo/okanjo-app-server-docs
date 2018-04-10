@@ -136,6 +136,22 @@ class DocService {
     }
 
     /**
+     * Removes excluded fields from the given property container, recursively
+     * @param container
+     * @private
+     */
+    _removeExcludedFields(container) {
+        Object.keys(container).forEach((param) => {
+            if ((container[param].description||"TODO").toLowerCase() === 'excluded') {
+                delete container[param];
+            } else if (container[param].children) {
+                // recurse child props
+                this._removeExcludedFields(container[param].children);
+            }
+        });
+    }
+
+    /**
      * Gets the routing table as a serializable object
      * @return {Array} Array of normalized route definitions
      */
@@ -164,23 +180,9 @@ class DocService {
                     };
 
                     // Strip excluded fields
-                    Object.keys(def.validation.params || {}).forEach((param) => {
-                        if ((def.validation.params[param].description||"TODO").toLowerCase() === 'excluded') {
-                            delete def.validation.params[param];
-                        }
-                    });
-
-                    Object.keys(def.validation.query|| {}).forEach((param) => {
-                        if ((def.validation.query[param].description||"TODO").toLowerCase() === 'excluded') {
-                            delete def.validation.query[param];
-                        }
-                    });
-
-                    Object.keys(def.validation.payload || {}).forEach((param) => {
-                        if ((def.validation.payload[param].description||"TODO").toLowerCase() === 'excluded') {
-                            delete def.validation.payload[param];
-                        }
-                    });
+                    this._removeExcludedFields(def.validation.params || {});
+                    this._removeExcludedFields(def.validation.query || {});
+                    this._removeExcludedFields(def.validation.payload || {});
 
                     out.push(def);
                 }

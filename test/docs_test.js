@@ -104,6 +104,9 @@ describe('Okanjo Server Docs', () => {
 
             res.headers['content-type'].should.match(/^text\/markdown/);
             res.body.should.be.a.String().and.not.not.be.ok();
+
+            should(res.body.indexOf('secret')).be.exactly(-1);
+
             done();
         });
     });
@@ -116,6 +119,9 @@ describe('Okanjo Server Docs', () => {
 
             res.headers['content-type'].should.match(/^application\/json/);
             res.body.should.be.an.Object().and.not.not.be.ok();
+
+            should(JSON.stringify(res.body).indexOf('secret')).be.exactly(-1);
+
             done();
         });
     });

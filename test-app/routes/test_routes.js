@@ -40,7 +40,8 @@ module.exports = function() {
         stuff: Joi.object().keys({
             id: app.fields.id.optional(),
             resourceName: app.fields.resourceName.optional(),
-            take: app.fields.take
+            take: app.fields.take,
+            secret: Joi.string().description('Excluded')
         }),
 
         things: Joi.object().keys({
@@ -283,6 +284,18 @@ module.exports = function() {
             id: 'test.complex',
             description: "Complex Object Breakout",
             tags: ["Testy", "Complex Object"]
+        }
+    });
+
+    // this route should not appear in docs or json
+    this.hapi.route({
+        method: 'GET',
+        path: '/company/secrets',
+        handler,
+        config: {
+            id: 'test.secret',
+            description: "Excluded",
+            tags: ["Excluded"]
         }
     });
 

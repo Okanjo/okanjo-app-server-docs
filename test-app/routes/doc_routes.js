@@ -37,7 +37,7 @@ module.exports = function() {
         path: '/docs',
         handler: (request, reply) => {
             reply(this.app.services.docs.getDocsPageMarkupTemplate({
-                // cdn: 'http://localhost:3002'
+                cdn: 'http://localhost:3002'
             })).header('content-type', 'text/html; charset=UTF-8');
         },
         config: {

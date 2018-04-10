@@ -1,5 +1,8 @@
 # Changelog
 
+## v1.1.1
+ * Fixed an issue where excluded child properties were included
+ 
 ## v1.1.0
 v1.1.0 – Supports documentation of complex objects
  * getPublicRouteTable
