@@ -4,13 +4,13 @@ const Joi = require('joi');
 
 /* istanbul ignore next */
 /**
-* @this OkanjoWebServer
+* @this OkanjoServer
 */
 module.exports = function() {
     const app = this.app;
 
-    const handler = (request, reply) => {
-        reply(this.app.response.ok());
+    const handler = (/*request, h*/) => {
+        return app.response.ok();
     };
 
 

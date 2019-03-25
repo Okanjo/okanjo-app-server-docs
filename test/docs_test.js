@@ -13,11 +13,11 @@ describe('Okanjo Server Docs', () => {
     const config = require('../test-app/config');
 
     let app, server;
-    const baseUrl = `http://localhost:${config.webServer.port}/`;
+    const baseUrl = `http://localhost:${config.webServer.hapiServerOptions.port}/`;
 
 
     // Start the web server
-    before((done) => {
+    before(async () => {
         app = new OkanjoApp(config);
 
         // Hapi Authentication Strategies Enumeration
@@ -35,24 +35,17 @@ describe('Okanjo Server Docs', () => {
             extensions: [
                 authStrategies
             ]
-        }, (err) => {
-            should(err).not.be.ok();
-
-            server.start((err) => {
-                should(err).not.be.ok();
-                done();
-            });
         });
+
+        await server.start();
 
         // Assign the server
         app.services.docs.server = server;
     });
 
     // Stop the web server
-    after((done) => {
-        server.stop(() => {
-            done();
-        });
+    after(async () => {
+        await server.stop();
     });
 
     it('should get routing table', function() {

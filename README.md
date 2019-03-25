@@ -16,6 +16,8 @@ Note: requires
 * [`okanjo-app`](https://github.com/okanjo/okanjo-app) module.
 * [`okanjo-app-server`](https://github.com/okanjo/okanjo-app-server) module.
 
+> Note: Use okanjo-app-server-docs@^1.x.x for OkanjoServer 1.x (Hapi 16 and below)
+
 ## Example Usage
 
 You can see a basic demonstration by running:

@@ -3,7 +3,7 @@ module.exports = {
     webServer: {
 
         // HAPI global options
-        hapiConnectionOptions: {
+        hapiServerOptions: {
             routes: {
                 cors: true, // always allow CORS - we're an API!
                 jsonp: 'callback', // allow transposition of responses to JSONP callbacks when desired
@@ -26,11 +26,12 @@ module.exports = {
                         //'multipart/form-data',
                     ]
                 }
-            }
+            },
+
+            // Basic config
+            port: 3001,
         },
 
-        // Basic config
-        port: 3001,
         drainTime: 1, // how long to wait to drain connection before killing the socket on shutdown (in ms)
 
         // Worker config

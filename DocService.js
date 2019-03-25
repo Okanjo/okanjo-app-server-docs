@@ -160,33 +160,31 @@ class DocService {
         const table = this.server.hapi.table();
         const out = [];
 
-        table.forEach((tbl) => {
-            tbl.table.forEach((route) => {
-                /* istanbul ignore next: else might not happen if all routes are documented ! */
-                if (!this.IGNORE_ROUTE_TEST.test(route.path) && (route.settings.tags ? route.settings.tags.indexOf('Excluded') < 0 : true)) {
-                    const def = {
-                        id: route.settings.id,
-                        method: route.method,
-                        path: route.path,
-                        auth: route.settings.auth,
-                        description: route.settings.description,
-                        notes: route.settings.notes,
-                        tags: route.settings.tags,
-                        validation: {
-                            params: route.settings.validate.params ? route.settings.validate.params.describe().children : null,
-                            query: route.settings.validate.query ? route.settings.validate.query.describe().children : null,
-                            payload: route.settings.validate.payload ? route.settings.validate.payload.describe().children : null
-                        }
-                    };
+        table.forEach((route) => {
+            /* istanbul ignore next: else might not happen if all routes are documented ! */
+            if (!this.IGNORE_ROUTE_TEST.test(route.path) && (route.settings.tags ? route.settings.tags.indexOf('Excluded') < 0 : true)) {
+                const def = {
+                    id: route.settings.id,
+                    method: route.method,
+                    path: route.path,
+                    auth: route.settings.auth,
+                    description: route.settings.description,
+                    notes: route.settings.notes,
+                    tags: route.settings.tags,
+                    validation: {
+                        params: route.settings.validate.params ? route.settings.validate.params.describe().children : null,
+                        query: route.settings.validate.query ? route.settings.validate.query.describe().children : null,
+                        payload: route.settings.validate.payload ? route.settings.validate.payload.describe().children : null
+                    }
+                };
 
-                    // Strip excluded fields
-                    this._removeExcludedFields(def.validation.params || {});
-                    this._removeExcludedFields(def.validation.query || {});
-                    this._removeExcludedFields(def.validation.payload || {});
+                // Strip excluded fields
+                this._removeExcludedFields(def.validation.params || {});
+                this._removeExcludedFields(def.validation.query || {});
+                this._removeExcludedFields(def.validation.payload || {});
 
-                    out.push(def);
-                }
-            });
+                out.push(def);
+            }
         });
 
         // Return routes sorted by path
@@ -349,7 +347,7 @@ class DocService {
         if (route.tags && route.tags.length >= 2) {
             return `${route.tags[0]} ${route.tags[1]}`.toLowerCase().replace(/[^a-z0-9]/g, '-');
         } else {
-            const path = route.path.replace(/[\/\-{}]/g,'').replace(/ /, '-');
+            const path = route.path.replace(/[/-{}]/g,'').replace(/ /, '-');
             /* istanbul ignore next: edge case */
             return `route-list-${route.method}${path.length ? '-' + path :  ''}`;
         }
@@ -384,7 +382,7 @@ class DocService {
 
                 /* istanbul ignore if */
                 if (val.examples) {
-                    example = `E.g. ${val.examples.map((v) => "`"+v+"`").join(', ')}`;
+                    example = `E.g. ${val.examples.map((v) => "`"+v.value+"`").join(', ')}`;
                 }
 
                 /* istanbul ignore if */
@@ -422,7 +420,7 @@ class DocService {
                 return "`"+JSON.stringify(val)+"`";
             /* istanbul ignore next  */
             default:
-                console.error('Warning: Unknown default value for docs:', val);
+                this.app.dump('Warning: Unknown default value for docs:', val);
                 return val+"";
         }
     }

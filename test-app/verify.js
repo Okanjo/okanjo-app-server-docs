@@ -31,10 +31,10 @@ const server = new OkanjoWebServer(app, config.webServer, {
     extensions: [
         authStrategies
     ]
-}, (/*err*/) => {
-    server.start(() => {
-        console.log(`SERVER RUNNING! http://localhost:${config.webServer.port}`)
-    });
+});
+
+server.start().then(() => {
+    console.log(`SERVER RUNNING! ${server.hapi.info.uri}`); // eslint-disable-line no-console
 });
 
 // Assign the server
