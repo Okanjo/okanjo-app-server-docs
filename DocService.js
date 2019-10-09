@@ -415,6 +415,7 @@ class DocService {
         switch (typeof val) {
             case "string":
             case "number":
+            case "boolean":
                 return "`"+val+"`";
             case "object":
                 return "`"+JSON.stringify(val)+"`";
