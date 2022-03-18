@@ -132,7 +132,7 @@ class DocService {
             }
         }
 
-        return comparisons.find((x) => x !== 0) /* istanbul ignore next: out of scope */ || 0;
+        return comparisons.find((x) => x !== 0) || /* istanbul ignore next: out of scope */ 0;
     }
 
     /**
