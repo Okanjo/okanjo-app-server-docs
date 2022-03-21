@@ -1,6 +1,6 @@
 # Okanjo Server Documentation Generator
 
-[![Build Status](https://travis-ci.org/Okanjo/okanjo-app-server-docs.svg?branch=master)](https://travis-ci.org/Okanjo/okanjo-app-server-docs) [![Coverage Status](https://coveralls.io/repos/github/Okanjo/okanjo-app-server-docs/badge.svg?branch=master)](https://coveralls.io/github/Okanjo/okanjo-app-server-docs?branch=master)
+[![Node.js CI](https://github.com/Okanjo/okanjo-app-server-docs/actions/workflows/node.js.yml/badge.svg)](https://github.com/Okanjo/okanjo-app-server-docs/actions/workflows/node.js.yml)[![Coverage Status](https://coveralls.io/repos/github/Okanjo/okanjo-app-server-docs/badge.svg?branch=master)](https://coveralls.io/github/Okanjo/okanjo-app-server-docs?branch=master)
 
 Super basic module to generate documentation in Markdown and JSON based on HAPI route tags. You could use this to generate an SDK!
 
@@ -17,6 +17,14 @@ Note: requires
 * [`okanjo-app-server`](https://github.com/okanjo/okanjo-app-server) module.
 
 > Note: Use okanjo-app-server-docs@^1.x.x for OkanjoServer 1.x (Hapi 16 and below)
+
+## Notable Changes
+
+### v3.0.0
+- Updated to support Hapi v20 / Joi v17
+- Supports Okanjo-App-Server v3
+- Supports Node v16
+
 
 ## Example Usage
 

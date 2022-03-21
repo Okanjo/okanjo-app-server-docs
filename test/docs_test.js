@@ -119,4 +119,557 @@ describe('Okanjo Server Docs', () => {
         });
     });
 
+    describe('_removeExcludedFields', () => {
+
+        it('should handle new joi formats', () => {
+            const new_payload = {
+                "type": "object",
+                "keys": {
+                    "complexObject": {
+                        "type": "object",
+                        "keys": {
+                            "stuff": {
+                                "type": "object",
+                                "keys": {
+                                    "id": {
+                                        "type": "string",
+                                        "flags": {
+                                            "presence": "optional"
+                                        },
+                                        "rules": [
+                                            {
+                                                "name": "token"
+                                            }
+                                        ]
+                                    },
+                                    "resourceName": {
+                                        "type": "string",
+                                        "flags": {
+                                            "description": "Name of the product.",
+                                            "presence": "optional"
+                                        },
+                                        "rules": [
+                                            {
+                                                "name": "trim",
+                                                "args": {
+                                                    "enabled": true
+                                                }
+                                            },
+                                            {
+                                                "name": "min",
+                                                "args": {
+                                                    "limit": 1
+                                                }
+                                            },
+                                            {
+                                                "name": "max",
+                                                "args": {
+                                                    "limit": 140
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    "take": {
+                                        "type": "number",
+                                        "flags": {
+                                            "default": 25,
+                                            "description": "Returns this many records. Used for pagination."
+                                        },
+                                        "rules": [
+                                            {
+                                                "name": "integer"
+                                            },
+                                            {
+                                                "name": "min",
+                                                "args": {
+                                                    "limit": 1
+                                                }
+                                            },
+                                            {
+                                                "name": "max",
+                                                "args": {
+                                                    "limit": 50
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    "secret": {
+                                        "type": "string",
+                                        "flags": {
+                                            "description": "Excluded"
+                                        }
+                                    }
+                                }
+                            },
+                            "things": {
+                                "type": "object",
+                                "keys": {
+                                    "description": {
+                                        "type": "string",
+                                        "flags": {
+                                            "description": "Description of the product.",
+                                            "presence": "optional"
+                                        },
+                                        "rules": [
+                                            {
+                                                "name": "trim",
+                                                "args": {
+                                                    "enabled": true
+                                                }
+                                            },
+                                            {
+                                                "name": "min",
+                                                "args": {
+                                                    "limit": 1
+                                                }
+                                            },
+                                            {
+                                                "name": "max",
+                                                "args": {
+                                                    "limit": 40960
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    "price": {
+                                        "type": "number",
+                                        "flags": {
+                                            "description": "Price of the product.",
+                                            "presence": "optional"
+                                        },
+                                        "rules": [
+                                            {
+                                                "name": "greater",
+                                                "args": {
+                                                    "limit": 0
+                                                }
+                                            },
+                                            {
+                                                "name": "precision",
+                                                "args": {
+                                                    "limit": 4
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            app.services.docs._removeExcludedFields(new_payload.keys);
+
+            // console.log(JSON.stringify(new_payload, null, 2));
+            new_payload.should.deepEqual({
+                "type": "object",
+                "keys": {
+                    "complexObject": {
+                        "type": "object",
+                        "keys": {
+                            "stuff": {
+                                "type": "object",
+                                "keys": {
+                                    "id": {
+                                        "type": "string",
+                                        "flags": {
+                                            "presence": "optional"
+                                        },
+                                        "rules": [
+                                            {
+                                                "name": "token"
+                                            }
+                                        ]
+                                    },
+                                    "resourceName": {
+                                        "type": "string",
+                                        "flags": {
+                                            "description": "Name of the product.",
+                                            "presence": "optional"
+                                        },
+                                        "rules": [
+                                            {
+                                                "name": "trim",
+                                                "args": {
+                                                    "enabled": true
+                                                }
+                                            },
+                                            {
+                                                "name": "min",
+                                                "args": {
+                                                    "limit": 1
+                                                }
+                                            },
+                                            {
+                                                "name": "max",
+                                                "args": {
+                                                    "limit": 140
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    "take": {
+                                        "type": "number",
+                                        "flags": {
+                                            "default": 25,
+                                            "description": "Returns this many records. Used for pagination."
+                                        },
+                                        "rules": [
+                                            {
+                                                "name": "integer"
+                                            },
+                                            {
+                                                "name": "min",
+                                                "args": {
+                                                    "limit": 1
+                                                }
+                                            },
+                                            {
+                                                "name": "max",
+                                                "args": {
+                                                    "limit": 50
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            },
+                            "things": {
+                                "type": "object",
+                                "keys": {
+                                    "description": {
+                                        "type": "string",
+                                        "flags": {
+                                            "description": "Description of the product.",
+                                            "presence": "optional"
+                                        },
+                                        "rules": [
+                                            {
+                                                "name": "trim",
+                                                "args": {
+                                                    "enabled": true
+                                                }
+                                            },
+                                            {
+                                                "name": "min",
+                                                "args": {
+                                                    "limit": 1
+                                                }
+                                            },
+                                            {
+                                                "name": "max",
+                                                "args": {
+                                                    "limit": 40960
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    "price": {
+                                        "type": "number",
+                                        "flags": {
+                                            "description": "Price of the product.",
+                                            "presence": "optional"
+                                        },
+                                        "rules": [
+                                            {
+                                                "name": "greater",
+                                                "args": {
+                                                    "limit": 0
+                                                }
+                                            },
+                                            {
+                                                "name": "precision",
+                                                "args": {
+                                                    "limit": 4
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+        });
+
+        it('should handle older joi formats too', () => {
+            const old_payload = {
+                "type": "object",
+                "children": {
+                    "complexObject": {
+                        "type": "object",
+                        "children": {
+                            "stuff": {
+                                "type": "object",
+                                "children": {
+                                    "id": {
+                                        "type": "string",
+                                        "flags": {
+                                            "presence": "optional"
+                                        },
+                                        "invalids": [
+                                            ""
+                                        ],
+                                        "rules": [
+                                            {
+                                                "name": "token"
+                                            }
+                                        ]
+                                    },
+                                    "resourceName": {
+                                        "type": "string",
+                                        "flags": {
+                                            "trim": true,
+                                            "presence": "optional"
+                                        },
+                                        "description": "Name of the product.",
+                                        "invalids": [
+                                            ""
+                                        ],
+                                        "rules": [
+                                            {
+                                                "name": "trim"
+                                            },
+                                            {
+                                                "name": "min",
+                                                "arg": 1
+                                            },
+                                            {
+                                                "name": "max",
+                                                "arg": 140
+                                            }
+                                        ]
+                                    },
+                                    "take": {
+                                        "type": "number",
+                                        "flags": {
+                                            "unsafe": false,
+                                            "default": 25
+                                        },
+                                        "description": "Returns this many records. Used for pagination.",
+                                        "invalids": [
+                                            null,
+                                            null
+                                        ],
+                                        "rules": [
+                                            {
+                                                "name": "integer"
+                                            },
+                                            {
+                                                "name": "min",
+                                                "arg": 1
+                                            },
+                                            {
+                                                "name": "max",
+                                                "arg": 50
+                                            }
+                                        ]
+                                    },
+                                    "secret": {
+                                        "type": "string",
+                                        "description": "Excluded",
+                                        "invalids": [
+                                            ""
+                                        ]
+                                    }
+                                }
+                            },
+                            "things": {
+                                "type": "object",
+                                "children": {
+                                    "description": {
+                                        "type": "string",
+                                        "flags": {
+                                            "trim": true,
+                                            "presence": "optional"
+                                        },
+                                        "description": "Description of the product.",
+                                        "invalids": [
+                                            ""
+                                        ],
+                                        "rules": [
+                                            {
+                                                "name": "trim"
+                                            },
+                                            {
+                                                "name": "min",
+                                                "arg": 1
+                                            },
+                                            {
+                                                "name": "max",
+                                                "arg": 40960
+                                            }
+                                        ]
+                                    },
+                                    "price": {
+                                        "type": "number",
+                                        "flags": {
+                                            "unsafe": false,
+                                            "precision": 4,
+                                            "presence": "optional"
+                                        },
+                                        "description": "Price of the product.",
+                                        "invalids": [
+                                            null,
+                                            null
+                                        ],
+                                        "rules": [
+                                            {
+                                                "name": "greater",
+                                                "arg": 0
+                                            },
+                                            {
+                                                "name": "precision",
+                                                "arg": 4
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            app.services.docs._removeExcludedFields(old_payload.children);
+
+            // console.log(JSON.stringify(old_payload, null, 2));
+            old_payload.should.deepEqual({
+                "type": "object",
+                "children": {
+                    "complexObject": {
+                        "type": "object",
+                        "children": {
+                            "stuff": {
+                                "type": "object",
+                                "children": {
+                                    "id": {
+                                        "type": "string",
+                                        "flags": {
+                                            "presence": "optional"
+                                        },
+                                        "invalids": [
+                                            ""
+                                        ],
+                                        "rules": [
+                                            {
+                                                "name": "token"
+                                            }
+                                        ]
+                                    },
+                                    "resourceName": {
+                                        "type": "string",
+                                        "flags": {
+                                            "trim": true,
+                                            "presence": "optional"
+                                        },
+                                        "description": "Name of the product.",
+                                        "invalids": [
+                                            ""
+                                        ],
+                                        "rules": [
+                                            {
+                                                "name": "trim"
+                                            },
+                                            {
+                                                "name": "min",
+                                                "arg": 1
+                                            },
+                                            {
+                                                "name": "max",
+                                                "arg": 140
+                                            }
+                                        ]
+                                    },
+                                    "take": {
+                                        "type": "number",
+                                        "flags": {
+                                            "unsafe": false,
+                                            "default": 25
+                                        },
+                                        "description": "Returns this many records. Used for pagination.",
+                                        "invalids": [
+                                            null,
+                                            null
+                                        ],
+                                        "rules": [
+                                            {
+                                                "name": "integer"
+                                            },
+                                            {
+                                                "name": "min",
+                                                "arg": 1
+                                            },
+                                            {
+                                                "name": "max",
+                                                "arg": 50
+                                            }
+                                        ]
+                                    }
+                                }
+                            },
+                            "things": {
+                                "type": "object",
+                                "children": {
+                                    "description": {
+                                        "type": "string",
+                                        "flags": {
+                                            "trim": true,
+                                            "presence": "optional"
+                                        },
+                                        "description": "Description of the product.",
+                                        "invalids": [
+                                            ""
+                                        ],
+                                        "rules": [
+                                            {
+                                                "name": "trim"
+                                            },
+                                            {
+                                                "name": "min",
+                                                "arg": 1
+                                            },
+                                            {
+                                                "name": "max",
+                                                "arg": 40960
+                                            }
+                                        ]
+                                    },
+                                    "price": {
+                                        "type": "number",
+                                        "flags": {
+                                            "unsafe": false,
+                                            "precision": 4,
+                                            "presence": "optional"
+                                        },
+                                        "description": "Price of the product.",
+                                        "invalids": [
+                                            null,
+                                            null
+                                        ],
+                                        "rules": [
+                                            {
+                                                "name": "greater",
+                                                "arg": 0
+                                            },
+                                            {
+                                                "name": "precision",
+                                                "arg": 4
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            })
+
+        });
+
+    });
+
 });

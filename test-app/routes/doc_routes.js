@@ -45,7 +45,7 @@ module.exports = function() {
             return h
                 .response(this.app.services.docs.getDocsPageMarkupTemplate({
                     // cdn: 'http://localhost:3002'
-                    cdn: 'http://developer.okanjo.com'
+                    cdn: 'https://developer.okanjo.com'
                 }))
                 .header('content-type', 'text/html; charset=UTF-8')
             ;

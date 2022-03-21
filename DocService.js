@@ -55,7 +55,6 @@ class DocService {
      * Converts the route authentication strategy into friendly tags. Override this!
      * @param spec
      * @return {Array}
-     * @private
      */
     _getAuthComponents(spec) {
         const components = new Set();
@@ -142,8 +141,12 @@ class DocService {
      */
     _removeExcludedFields(container) {
         Object.keys(container).forEach((param) => {
-            if ((container[param].description||"TODO").toLowerCase() === 'excluded') {
+            const description = container[param].description || (container[param].flags && container[param].flags.description) || 'TODO';
+            if (description.toLowerCase() === 'excluded') {
                 delete container[param];
+            } else if (container[param].keys) {
+                // recurse child props
+                this._removeExcludedFields(container[param].keys);
             } else if (container[param].children) {
                 // recurse child props
                 this._removeExcludedFields(container[param].children);
@@ -172,9 +175,9 @@ class DocService {
                     notes: route.settings.notes,
                     tags: route.settings.tags,
                     validation: {
-                        params: route.settings.validate.params ? route.settings.validate.params.describe().children : null,
-                        query: route.settings.validate.query ? route.settings.validate.query.describe().children : null,
-                        payload: route.settings.validate.payload ? route.settings.validate.payload.describe().children : null
+                        params: route.settings.validate.params ? (route.settings.validate.params.describe().keys || route.settings.validate.params.describe().children) : null,
+                        query: route.settings.validate.query ? (route.settings.validate.query.describe().keys || route.settings.validate.query.describe().children) : null,
+                        payload: route.settings.validate.payload ? (route.settings.validate.payload.describe().keys || route.settings.validate.payload.describe().children) : null
                     }
                 };
 
@@ -220,18 +223,20 @@ class DocService {
     _convertValidationToParamSpec(bucket, params = []) {
         Object.keys(bucket).forEach((paramName) => {
             const spec = bucket[paramName];
+            const flags = spec.flags || {};
             const param = {
                 name: paramName,
-                description: spec.description,
+                description: spec.description || flags.description,
                 type: spec.type,
-                required: (spec.flags || {}).presence === "required",
-                default: (spec.flags || {}).default,
+                required: flags.presence === "required",
+                default: flags.default,
                 children: []
             };
 
-            if (spec.children) {
+            const children = spec.keys || spec.children;
+            if (children) {
                 // Add children to the bucket
-                this._convertValidationToParamSpec(spec.children, param.children);
+                this._convertValidationToParamSpec(children, param.children);
             }
 
             params.push(param);
@@ -364,13 +369,14 @@ class DocService {
             if (prefix === '') markup.push('');
 
             Object.keys(schema).forEach((key) => {
-                const val = schema[key],
-                    flags = val.flags || {},
-                    presence = flags.presence,
-                    isEnum = flags.allowOnly || false,
-                    def = flags.default,
-                    type = val.type,
-                    badges = [];
+                const val = schema[key];
+                const flags = val.flags || {};
+                const presence = flags.presence;
+                const isEnum = flags.allowOnly || false;
+                const def = flags.default;
+                const type = val.type;
+                const badges = [];
+
                 let example = "",
                     enumeration = "";
 
@@ -382,7 +388,7 @@ class DocService {
 
                 /* istanbul ignore if */
                 if (val.examples) {
-                    example = `E.g. ${val.examples.map((v) => "`"+v.value+"`").join(', ')}`;
+                    example = `E.g. ${val.examples.map((v) => "`"+(v.value || v)+"`").join(', ')}`;
                 }
 
                 /* istanbul ignore if */
@@ -391,11 +397,11 @@ class DocService {
                 }
 
                 /* istanbul ignore next */
-                markup.push(`${prefix}${key} ${badges.join(' ')}\n${prefix}:   ${val.description  || 'TODO'} ${enumeration} ${example}`);
+                markup.push(`${prefix}${key} ${badges.join(' ')}\n${prefix}:   ${val.description || flags.description || 'TODO'} ${enumeration} ${example}`);
 
                 // Does this object have children? if so, show child properties
-                if (val.children) {
-                    this._parameterize(markup, val.children, prefix + "  ");
+                if (val.keys || val.children) {
+                    this._parameterize(markup, val.children || val.keys, prefix + "  ");
                 }
             });
 

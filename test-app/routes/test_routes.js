@@ -58,11 +58,11 @@ module.exports = function() {
         config: {
             auth: app.authModes.sessionAndKey,
             validate: {
-                query: {
+                query: Joi.object({
                     store_id: app.fields.id.optional(),
                     skip: app.fields.skip.optional(),
                     take: app.fields.take.optional()
-                }
+                })
             },
             id: 'product.list',
             description: "Lists products",
@@ -77,7 +77,7 @@ module.exports = function() {
         config: {
             auth: app.authModes.sessionAndKey,
             validate: {
-                payload: {
+                payload: Joi.object({
                     // Where to post the product
                     store_id: app.fields.id.required(),
 
@@ -90,7 +90,7 @@ module.exports = function() {
                     buy_url_track_param: app.fields.buy_url_track_param.optional(),
 
                     currency: app.fields.currency.optional().default('USD')
-                }
+                })
             },
             id: 'product.create',
             description: "Creates a product",
@@ -105,9 +105,9 @@ module.exports = function() {
         config: {
             auth: app.authModes.keyOnly,
             validate: {
-                params: {
+                params: Joi.object({
                     product_id: app.fields.id.required()
-                }
+                })
             },
             id: 'product.retrieve',
             description: "Retrieves a product",
@@ -134,10 +134,10 @@ module.exports = function() {
         config: {
             auth: app.authModes.sessionAndKey,
             validate: {
-                params: {
+                params: Joi.object({
                     product_id: app.fields.id.required()
-                },
-                payload: {
+                }),
+                payload: Joi.object({
                     // Required
                     name: app.fields.resourceName.optional(),
                     description: app.fields.description.optional(),
@@ -148,7 +148,7 @@ module.exports = function() {
 
                     currency: app.fields.currency.optional()
 
-                }
+                })
             },
             id: 'product.update',
             description: "Updates a product",
@@ -163,9 +163,9 @@ module.exports = function() {
         config: {
             auth: app.authModes.sessionAndKey,
             validate: {
-                params: {
+                params: Joi.object({
                     product_id: app.fields.id.required()
-                }
+                })
             },
             id: 'product.delete',
             description: "Deletes a product",
@@ -243,9 +243,9 @@ module.exports = function() {
         handler,
         config: {
             validate: {
-                query: {
+                query: Joi.object({
                     val: Joi.object().default({a: "hi", b: 42}).description('Example').optional()
-                }
+                })
             },
             id: 'test.delete',
             description: "Whatever",
@@ -259,9 +259,9 @@ module.exports = function() {
         handler,
         config: {
             validate: {
-                payload: {
+                payload: Joi.object({
                     val: Joi.string().description('poop')
-                }
+                })
             },
             id: 'test.presense',
             description: "Whatever",
@@ -277,9 +277,9 @@ module.exports = function() {
         handler,
         config: {
             validate: {
-                payload: {
+                payload: Joi.object({
                     complexObject: app.fields.complexObject
-                }
+                })
             },
             id: 'test.complex',
             description: "Complex Object Breakout",

@@ -7,3 +7,4 @@ docs
 .eslint*
 .travis.yml
 test-app
+.github
