@@ -16,6 +16,8 @@ Note: requires
 * [`okanjo-app`](https://github.com/okanjo/okanjo-app) module.
 * [`okanjo-app-server`](https://github.com/okanjo/okanjo-app-server) module.
 
+> Note: Use okanjo-app-server-docs@^3.x.x for OkanjoServer 3.x (Hapi 20)
+> Note: Use okanjo-app-server-docs@^2.x.x for OkanjoServer 2.x (Hapi 18)
 > Note: Use okanjo-app-server-docs@^1.x.x for OkanjoServer 1.x (Hapi 16 and below)
 
 ## Notable Changes
