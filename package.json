@@ -33,7 +33,7 @@
     "nyc": "^15.1.0",
     "okanjo-app": "^3.2.0",
     "okanjo-app-server": "^3.0.0",
-    "hapi-auth-basic-key": "^5.0.0",
+    "hapi-auth-basic-key": "^6.0.0",
     "should": "^13.2.3"
   },
   "peerDependencies": {
